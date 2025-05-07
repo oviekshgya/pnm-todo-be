@@ -47,7 +47,7 @@ func Start() {
 	routes.Router = fiber.New(fiber.Config{
 		Prefork:               false,
 		CaseSensitive:         true,
-		StrictRouting:         true,
+		StrictRouting:         false,
 		ServerHeader:          "Fiber",
 		AppName:               "Face service",
 		DisableStartupMessage: true,

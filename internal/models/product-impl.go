@@ -24,9 +24,9 @@ func SEARCHProductByName(search string) func(db *gorm.DB) *gorm.DB {
 	}
 }
 
-func SelectProductById() func(db *gorm.DB) *gorm.DB {
+func SelectProduct() func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
-		return db.Select("name, jumlah, created_at, updated_at").Order("created_at desc")
+		return db.Select("name, jumlah, created_at, updated_at, id").Order("created_at desc")
 	}
 }
 

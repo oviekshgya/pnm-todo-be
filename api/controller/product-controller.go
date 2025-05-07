@@ -5,6 +5,7 @@ import (
 	"gorm.io/gorm"
 	"pnm-todo-be/internal/service"
 	"pnm-todo-be/pkg"
+	"strconv"
 )
 
 type ProductController struct {
@@ -38,4 +39,15 @@ func (controller *ProductController) CRUD(c *fiber.Ctx) error {
 		return response.Respose(fiber.StatusMethodNotAllowed, "Method not allowed", true, nil)
 	}
 
+}
+
+func (controller *ProductController) GetProduct(c *fiber.Ctx) error {
+	response := pkg.InitialResponse{Ctx: c}
+
+	id, _ := strconv.Atoi(c.Query("id", "0"))
+	result, err := controller.Product.GetProduct(id, c)
+	if err != nil {
+		return response.Respose(fiber.StatusBadRequest, err.Error(), true, nil)
+	}
+	return response.Respose(fiber.StatusOK, "success", false, result)
 }

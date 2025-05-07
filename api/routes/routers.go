@@ -27,5 +27,6 @@ func Route() {
 	product.Use(middleware.AuthBearer())
 	{
 		product.All("/:jenis", ProductController.CRUD)
+		product.Get("/", ProductController.GetProduct)
 	}
 }
