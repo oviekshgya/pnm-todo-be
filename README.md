@@ -11,6 +11,8 @@
 
 **Documentation:** [URL](https://ihwdwyq28z.apidog.io)
 
+**Live Demo** [URL DRIVE](https://drive.google.com/file/d/1_1CiafwnRAUqmw6YJIQqAb02LmvendMh/view?usp=sharing)
+
 ## Running Tests
 
 To run tests, run the following command with air toml runner
@@ -36,5 +38,8 @@ $ go run main.go
 
 To deploy this project
 
-``$ docker-compose up --build --remove-orphans -d
+``$ docker build -t shagya30/pnm-todo-be:latest .
+``
+
+``$ docker push shagya30/pnm-todo-be:latest 
 ``
