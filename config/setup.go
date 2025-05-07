@@ -57,7 +57,7 @@ func Start() {
 	routes.Route()
 
 	if !fiber.IsChild() {
-		log.Printf("INFO: SERVICE RUNNING ON PORT 3001")
+		log.Printf("INFO: SERVICE RUNNING ON PORT " + viper.GetString("SERVICE_PORT"))
 	}
 
 	err2 := routes.Router.Listen(":" + viper.GetString("SERVICE_PORT"))
