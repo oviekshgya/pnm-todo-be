@@ -1,6 +1,10 @@
 package models
 
-import "gorm.io/gorm"
+import (
+	"fmt"
+	"github.com/gofiber/fiber/v2"
+	"gorm.io/gorm"
+)
 
 func TableNameGet(name string) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
@@ -26,17 +30,27 @@ func SelectProductById() func(db *gorm.DB) *gorm.DB {
 	}
 }
 
-func CreateProduct(db *gorm.DB, data Product) (*Product, error) {
-	if err := db.Create(&data).Error; err != nil {
-		return nil, err
+func CRUDProduct(db *gorm.DB, method string, data Product) (*Product, error) {
+	switch method {
+	case fiber.MethodPost:
+		if err := db.Create(&data).Error; err != nil {
+			return nil, err
+		}
+		return &data, nil
+
+	case fiber.MethodPut:
+		if err := db.Save(&data).Error; err != nil {
+			return nil, err
+		}
+		return &data, nil
+
+	case fiber.MethodDelete:
+		if err := db.Where("id = ?", data.ID).Delete(&Product{}).Error; err != nil {
+			return nil, err
+		}
+		return &data, nil
+
+	default:
+		return nil, fmt.Errorf("unsupported method: %s", method)
 	}
-	return &data, nil
-}
-
-func UpdateProduct(db *gorm.DB, data Product) error {
-	return db.Save(&data).Error
-}
-
-func DeleteProductById(db *gorm.DB, id int) error {
-	return db.Where("id = ?", id).Delete(&Product{}).Error
 }

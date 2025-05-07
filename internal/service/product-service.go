@@ -1,6 +1,7 @@
 package service
 
 import (
+	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 	"pnm-todo-be/internal/models"
 	"pnm-todo-be/pkg"
@@ -11,7 +12,7 @@ type ProductService struct {
 	DB *gorm.DB
 }
 
-func (service *ProductService) CRUDProduct(data pkg.CRUDProduct) (interface{}, error) {
+func (service *ProductService) CRUDProduct(data pkg.CRUDProduct, c *fiber.Ctx) (interface{}, error) {
 	result, err := pkg.WithTransaction(service.DB, func(tx *gorm.DB) (interface{}, error) {
 		dataDB := models.Product{
 			Name:      data.Name,
@@ -21,13 +22,7 @@ func (service *ProductService) CRUDProduct(data pkg.CRUDProduct) (interface{}, e
 			UpdatedAt: time.Now(),
 		}
 
-		if data.ID != 0 {
-			if updated := models.UpdateProduct(tx, dataDB); updated != nil {
-				return nil, updated
-			}
-			return &dataDB, nil
-		}
-		created, err := models.CreateProduct(tx, dataDB)
+		created, err := models.CRUDProduct(tx, c.Method(), dataDB)
 		if err != nil {
 			return nil, err
 		}

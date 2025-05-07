@@ -27,9 +27,15 @@ func (controller *ProductController) CRUD(c *fiber.Ctx) error {
 		return response.Respose(fiber.StatusUnprocessableEntity, err.Error(), true, nil)
 	}
 
-	result, err := controller.Product.CRUDProduct(input)
-	if err != nil {
-		return response.Respose(fiber.StatusBadRequest, err.Error(), true, nil)
+	switch c.Method() {
+	case fiber.MethodPost, fiber.MethodPut, fiber.MethodDelete:
+		result, err := controller.Product.CRUDProduct(input, c)
+		if err != nil {
+			return response.Respose(fiber.StatusBadRequest, err.Error(), true, nil)
+		}
+		return response.Respose(fiber.StatusAccepted, "success", false, result)
+	default:
+		return response.Respose(fiber.StatusMethodNotAllowed, "Method not allowed", true, nil)
 	}
-	return response.Respose(fiber.StatusAccepted, "success", false, result)
+
 }

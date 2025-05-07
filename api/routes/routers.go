@@ -26,6 +26,6 @@ func Route() {
 	product := v1.Group("/product")
 	product.Use(middleware.AuthBearer())
 	{
-		product.Post("/:jenis", ProductController.CRUD)
+		product.All("/:jenis", ProductController.CRUD)
 	}
 }
