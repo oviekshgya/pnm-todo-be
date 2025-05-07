@@ -20,5 +20,6 @@ func Route() {
 	v1.Use(middleware.BasicAuthMiddleware(), middleware.APIKeyMiddleware(), middleware.RateLimitMiddleware(5, 10*time.Second))
 	{
 		v1.Post("/create", UserController.RegisterUser)
+		v1.Post("/login", UserController.Login)
 	}
 }
