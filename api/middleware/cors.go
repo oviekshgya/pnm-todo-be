@@ -5,9 +5,12 @@ import (
 	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/patrickmn/go-cache"
 	"github.com/spf13/viper"
+	"pnm-todo-be/pkg"
 	"strings"
 	"sync"
+	"time"
 )
 
 func CORSMiddleware() fiber.Handler {
@@ -29,7 +32,7 @@ var apiKeyCache sync.Map
 
 func BasicAuthMiddleware() fiber.Handler {
 	return func(c *fiber.Ctx) error {
-		if strings.Contains(c.OriginalURL(), "/user-jwt") {
+		if strings.Contains(c.OriginalURL(), "/product") {
 			return c.Next()
 		}
 
@@ -92,6 +95,34 @@ func APIKeyMiddleware() fiber.Handler {
 
 		apiKeyCache.Store(fmt.Sprintf("%s%s", apiKey, c.IP()), true)
 
+		return c.Next()
+	}
+}
+
+var TokenCache = cache.New(10*time.Minute, 15*time.Minute)
+
+func AuthBearer() fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		const BEARER_SCHEMA = "Bearer "
+		authHeader := c.Get("Authorization")
+
+		if authHeader == "" {
+			return c.Status(401).JSON(fiber.Map{"message": "Unauthorized header null"})
+		}
+		tokenString := authHeader[len(BEARER_SCHEMA):]
+		if tokenString == "" {
+			return c.Status(401).JSON(fiber.Map{"message": "Unauthorized token null"})
+		}
+
+		if _, found := TokenCache.Get(tokenString); found {
+			return c.Next()
+		}
+
+		_, err := pkg.ExtractTokenJWT(tokenString, c)
+		if err != nil {
+			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{})
+		}
+		TokenCache.Set(tokenString, true, cache.DefaultExpiration)
 		return c.Next()
 	}
 }

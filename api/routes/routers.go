@@ -22,4 +22,10 @@ func Route() {
 		v1.Post("/create", UserController.RegisterUser)
 		v1.Post("/login", UserController.Login)
 	}
+
+	product := v1.Group("/product")
+	product.Use(middleware.AuthBearer())
+	{
+		product.Post("/:jenis", ProductController.CRUD)
+	}
 }

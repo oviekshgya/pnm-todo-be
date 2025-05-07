@@ -6,9 +6,11 @@ import (
 )
 
 var (
-	UserController *controller.UserController
+	UserController    *controller.UserController
+	ProductController *controller.ProductController
 )
 
 func InitialRoute() {
 	UserController = controller.HandlerUserController(db.ConnDB)
+	ProductController = controller.HandlerProductController(db.ConnDB)
 }

@@ -8,13 +8,13 @@ import (
 )
 
 type UserController struct {
-	FaceService service.UserService
+	User service.UserService
 }
 
 func HandlerUserController(db *gorm.DB) *UserController {
 
 	return &UserController{
-		FaceService: service.UserService{
+		User: service.UserService{
 			DB: db,
 		},
 	}
@@ -27,7 +27,7 @@ func (controller *UserController) RegisterUser(c *fiber.Ctx) error {
 		return response.Respose(fiber.StatusUnprocessableEntity, err.Error(), true, nil)
 	}
 
-	result, err := controller.FaceService.RegisterUser(input)
+	result, err := controller.User.RegisterUser(input)
 	if err != nil {
 		return response.Respose(fiber.StatusBadRequest, err.Error(), true, nil)
 	}
@@ -41,7 +41,7 @@ func (controller *UserController) Login(c *fiber.Ctx) error {
 		return response.Respose(fiber.StatusUnprocessableEntity, err.Error(), true, nil)
 	}
 
-	result, err := controller.FaceService.LoginUser(input)
+	result, err := controller.User.LoginUser(input)
 	if err != nil {
 		return response.Respose(fiber.StatusBadRequest, err.Error(), true, nil)
 	}
