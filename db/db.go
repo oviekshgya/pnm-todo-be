@@ -31,6 +31,9 @@ func Migrate(db *gorm.DB) {
 }
 
 func (conf DatabaseConfig) ConnectionDataBaseMain() {
+	var err error
+	var db *gorm.DB
+
 	connectionString := fmt.Sprintf(
 		"%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
 		conf.Username,
@@ -39,24 +42,27 @@ func (conf DatabaseConfig) ConnectionDataBaseMain() {
 		conf.Port,
 		conf.Dbname,
 	)
-	var err error
 
-	ConnDB, err = gorm.Open(mysql.Open(connectionString), &gorm.Config{
-		PrepareStmt: true,
-	})
-
-	if err != nil {
-		log.Fatal(err)
+	for retries := 0; retries < 5; retries++ {
+		db, err = gorm.Open(mysql.Open(connectionString), &gorm.Config{})
+		if err == nil {
+			break
+		}
+		log.Printf("Error connecting to the database: %v. Retrying in 5 seconds...", err)
+		time.Sleep(5 * time.Second)
 	}
-	Migrate(ConnDB)
 
-	sqlDB, err := ConnDB.DB()
 	if err != nil {
-		log.Fatalf("Gagal mendapatkan instance *sql.DB: %v", err)
+		log.Fatalf("Failed to connect to the database after retries: %v", err)
+	}
+	Migrate(db)
+
+	sqlDB, err := db.DB()
+	if err != nil {
+		log.Fatalf("Failed to get *sql.DB instance: %v", err)
 	}
 
 	sqlDB.SetMaxIdleConns(conf.MaxIdleConns)
 	sqlDB.SetMaxOpenConns(conf.MaxOpenConns)
 	sqlDB.SetConnMaxLifetime(time.Duration(conf.MaxLifetime) * time.Second)
-
 }

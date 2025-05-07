@@ -1,12 +1,36 @@
-version: '3.8'
 
 services:
+  db:
+    image: mysql:8
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: pnm-todo
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - backend
+
   app:
-    image: shagya39/pnm-todo-be:latest
+    image: shagya30/pnm-todo-be:latest
     container_name: pnm-todo-be
     environment:
       TZ: Asia/Jakarta
     volumes:
       - ./.env:/app/.env
-    network_mode: host
+    depends_on:
+      - db
+    networks:
+      - backend
     restart: always
+    env_file:
+      - .env
+
+volumes:
+  mysql-data:
+
+networks:
+  backend:
+    driver: bridge

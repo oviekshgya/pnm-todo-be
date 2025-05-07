@@ -43,3 +43,9 @@ To deploy this project
 
 ``$ docker push shagya30/pnm-todo-be:latest 
 ``
+
+``$ docker compose pull
+``
+
+``$ docker compose up -d
+``
