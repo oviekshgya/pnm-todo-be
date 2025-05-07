@@ -1,0 +1,14 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile  
+    container_name: pnm-todo-be
+    environment:
+      TZ: Asia/Jakarta
+    volumes:
+      - ./.env:/app/.env
+    network_mode: host
+    restart: always
+networks:
+  default:
