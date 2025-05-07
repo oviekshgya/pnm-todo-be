@@ -24,7 +24,7 @@ type DatabaseConfig struct {
 var ConnDB *gorm.DB
 
 func Migrate(db *gorm.DB) {
-	db.AutoMigrate(&models.User{})
+	db.AutoMigrate(&models.User{}, &models.Product{})
 	if db.Error != nil {
 		log.Fatal(db.Error)
 	}

@@ -2,6 +2,7 @@ package routes
 
 import (
 	"pnm-todo-be/api/controller"
+	"pnm-todo-be/db"
 )
 
 var (
@@ -9,5 +10,5 @@ var (
 )
 
 func InitialRoute() {
-	UserController = controller.HandlerUserController()
+	UserController = controller.HandlerUserController(db.ConnDB)
 }
