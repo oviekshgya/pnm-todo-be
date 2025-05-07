@@ -60,7 +60,7 @@ func Start() {
 		log.Printf("INFO: SERVICE RUNNING ON PORT " + viper.GetString("SERVICE_PORT"))
 	}
 
-	err2 := routes.Router.Listen(":" + viper.GetString("SERVICE_PORT"))
+	err2 := routes.Router.Listen("0.0.0.0:" + viper.GetString("SERVICE_PORT"))
 	if err2 != nil {
 		log.Fatalf("ERROR: cannot start server on port " + viper.GetString("SERVICE_PORT"))
 		return
