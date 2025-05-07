@@ -13,7 +13,7 @@ RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-s -w" -o /app/pnm-todo-be .
 # Copy all project files from root (because build context is root)
 COPY . .
 
-COPY ./pnm-todo-be /app/pnm-todo-be
+#COPY ./pnm-todo-be /app/pnm-todo-be
 
 # Stage 2: Runtime Stage
 FROM gcr.io/distroless/base-debian12:latest

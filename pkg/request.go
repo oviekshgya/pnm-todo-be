@@ -16,3 +16,7 @@ type CRUDProduct struct {
 	Name   string `form:"name" json:"name"`
 	Jumlah int    `form:"jumlah" json:"jumlah"`
 }
+
+type CheckEmailRequest struct {
+	Email string `json:"email" form:"email"`
+}

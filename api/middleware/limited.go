@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"strings"
 	"sync"
 	"time"
 )
@@ -18,6 +19,9 @@ var (
 
 func RateLimitMiddleware(limit int, period time.Duration) fiber.Handler {
 	return func(c *fiber.Ctx) error {
+		if strings.Contains(c.OriginalURL(), "/check") {
+			return c.Next()
+		}
 		clientIP := c.IP()
 
 		mu.Lock()

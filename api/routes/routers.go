@@ -21,6 +21,7 @@ func Route() {
 	{
 		v1.Post("/create", UserController.RegisterUser)
 		v1.Post("/login", UserController.Login)
+		v1.Post("/check", UserController.CheckEmail)
 	}
 
 	product := v1.Group("/product")

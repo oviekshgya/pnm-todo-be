@@ -1,8 +1,8 @@
+version: '3.8'
+
 services:
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile  
+    image: shagya39/pnm-todo-be:latest
     container_name: pnm-todo-be
     environment:
       TZ: Asia/Jakarta
@@ -10,5 +10,3 @@ services:
       - ./.env:/app/.env
     network_mode: host
     restart: always
-networks:
-  default:

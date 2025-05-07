@@ -47,3 +47,17 @@ func (controller *UserController) Login(c *fiber.Ctx) error {
 	}
 	return response.Respose(fiber.StatusOK, "success", false, result)
 }
+
+func (controller *UserController) CheckEmail(c *fiber.Ctx) error {
+	response := pkg.InitialResponse{Ctx: c}
+	var input pkg.CheckEmailRequest
+	if err := c.BodyParser(&input); err != nil {
+		return response.Respose(fiber.StatusUnprocessableEntity, err.Error(), true, nil)
+	}
+
+	result, err := controller.User.CheckEmail(input.Email)
+	if err != nil {
+		return response.Respose(fiber.StatusBadRequest, err.Error(), true, nil)
+	}
+	return response.Respose(fiber.StatusOK, "email valid", false, result)
+}

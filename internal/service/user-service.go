@@ -17,6 +17,11 @@ type UserService struct {
 
 func (service *UserService) RegisterUser(input pkg.RegisterRequest) (interface{}, error) {
 	result, err := pkg.WithTransaction(service.DB, func(tz *gorm.DB) (interface{}, error) {
+		getData := models.FindEmail(tz, input.Email)
+		if getData != nil {
+			return nil, fmt.Errorf("incorrect email already exists")
+		}
+
 		hash, err := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.DefaultCost)
 		if err != nil {
 			return nil, err
@@ -94,4 +99,14 @@ func (service *UserService) LoginUser(input pkg.LoginRequest) (interface{}, erro
 		return nil, err
 	}
 	return result, nil
+}
+
+func (service *UserService) CheckEmail(email string) (interface{}, error) {
+	getData := models.FindEmail(service.DB, email)
+	if getData != nil {
+		return nil, fmt.Errorf("incorrect email already exists")
+	}
+	return map[string]interface{}{
+		"emailStatus": true,
+	}, nil
 }
