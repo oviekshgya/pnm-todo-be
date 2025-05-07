@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"github.com/spf13/viper"
 	"gorm.io/gorm"
@@ -25,6 +26,7 @@ func SetDatabase() *SetupDatabase {
 		MaxLifetime:  viper.GetInt("DB_MAX_LIFE_TIME"),
 		MaxOpenConns: viper.GetInt("DB_MAX_OPEN_CONNECTIONS"),
 	}
+	fmt.Println("[DEBUG] MYSQL HOST", configDb.Host)
 
 	configDb.ConnectionDataBaseMain()
 

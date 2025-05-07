@@ -1,29 +1,36 @@
 
 services:
   db:
-    image: mysql:8
-    container_name: mysql
+    image: mysql:8.4.5
+    container_name: pnm-todo-db
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: pnm-todo
+    volumes:
+      - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    network_mode: host
+    restart: always
     ports:
       - "3306:3306"
-    volumes:
-      - mysql-data:/var/lib/mysql
-    networks:
-      - backend
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$DB_PASSWORD"]
+      interval: 30s
+      retries: 5
+      start_period: 10s
+      timeout: 10s
 
   app:
     image: shagya30/pnm-todo-be:latest
     container_name: pnm-todo-be
     environment:
       TZ: Asia/Jakarta
+      DB_HOST: localhost
     volumes:
       - ./.env:/app/.env
     depends_on:
-      - db
-    networks:
-      - backend
+      db:
+        condition: service_healthy
+    network_mode: host
     restart: always
     env_file:
       - .env
@@ -34,5 +41,4 @@ volumes:
   mysql-data:
 
 networks:
-  backend:
-    driver: bridge
+  default:

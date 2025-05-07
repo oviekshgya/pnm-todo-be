@@ -1,6 +1,10 @@
 FROM golang:1.23-alpine AS builder
 
 #RUN apk add --no-cache git
+RUN apk add --no-cache mysql-client tzdata
+
+ENV TZ=Asia/Jakarta
+RUN cp /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 WORKDIR /app
 

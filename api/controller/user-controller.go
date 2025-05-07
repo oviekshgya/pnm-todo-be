@@ -13,6 +13,9 @@ type UserController struct {
 
 func HandlerUserController(db *gorm.DB) *UserController {
 
+	if db == nil {
+		panic("db is nil")
+	}
 	return &UserController{
 		User: service.UserService{
 			DB: db,
